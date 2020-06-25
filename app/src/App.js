@@ -39,7 +39,6 @@ function App() {
     !isAuthenticating &&
       <div className="App">
       <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
-      {isAuthenticated? <href class= "logout" onClick={handleLogout}>Logout</href>: null }
         <Routes />
       </AppContext.Provider>
     </div>
