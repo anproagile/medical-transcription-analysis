@@ -278,7 +278,7 @@ export default function Home() {
   const handleSave = (e) => {
     e.preventDefault()
     setShowCreateSessionForm(true)
-    toggleShowForm()
+    toogleShowForm()
   }
 
   const handleSessionSubmit = (e) => {
