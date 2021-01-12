@@ -46,7 +46,7 @@ export default function TranscriptPane({
   return (
     <div className={s.base}>
       <div className={cs(s.toggles, transcriptChunks && s.visible, !showToggles && s.collapse)}>
-        <button className={s.hideToggleButton} onClick={() => setShowToggles(false)} aria-label="close"/>
+        <a className={s.hideToggleButton} onClick={() => setShowToggles(false)} />
         <h4>Highlight on transcript</h4>
         {CATEGORIES.map(c => (
            <div key={c} align="left">
