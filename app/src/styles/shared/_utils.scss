@@ -51,11 +51,13 @@
   }
 }
 
+
 // Hide element from view. Used to hide radios, checkboxes, and file upload elements.
 @mixin remove-from-view() {
   position: absolute;
   clip: rect(0 0 0 0);
 }
+
 
 @mixin tab-content-sizing {
   position: relative;

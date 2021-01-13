@@ -87,15 +87,13 @@ export default function streamAudioToWebSocket(userMediaStream, onChunk, onError
       // toggleStartStop();
     };
 
-    window.ws = websocket
-
     websocket.onclose = function (closeEvent) {
       if (manuallyStopped) return;
       // micStream.stop();
 
       // the close event immediately follows the error event; only handle one.
       if (!socketError && !transcribeException) {
-        if (closeEvent.code !== 1000) {
+        if (closeEvent.code != 1000) {
           onError('</i><strong>Streaming Exception</strong><br>' + closeEvent.reason);
         }
       }

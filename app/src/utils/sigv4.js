@@ -55,6 +55,20 @@ function createSignature(secret, time, region, service, stringToSign) {
   return hmac(h4, stringToSign, 'hex');
 };
 
+function createPresignedS3URL(name, options) {
+  options = options || {};
+  options.method = options.method || 'GET';
+  options.bucket = options.bucket || process.env.AWS_S3_BUCKET;
+  return createPresignedURL(
+    options.method,
+    options.bucket + '.s3.amazonaws.com',
+    '/' + name,
+    's3',
+    'UNSIGNED-PAYLOAD',
+    options
+  );
+};
+
 export function createPresignedURL(method, host, path, service, payload, options) {
   options = options || {};
   options.key = options.key || process.env.AWS_ACCESS_KEY_ID;
@@ -87,7 +101,7 @@ export function createPresignedURL(method, host, path, service, payload, options
 };
 
 function toTime(time) {
-  return new Date(time).toISOString().replace(/[:-]|\.\d{3}/g, '');
+  return new Date(time).toISOString().replace(/[:\-]|\.\d{3}/g, '');
 }
 
 function toDate(time) {
