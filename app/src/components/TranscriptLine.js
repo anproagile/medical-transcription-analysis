@@ -3,7 +3,7 @@ import s from './TranscriptLine.module.css';
 import cs from 'clsx';
 
 import classMap from '../transcriptHighlights';
-import { Editable, EditablePreview, EditableInput, Box } from '@chakra-ui/react';
+import { Editable, EditableInput, Box } from '@chakra-ui/react';
 
 // Reduces results down to a single set of non-overlapping ranges, each with a list of applicable results
 function combineSegments(results) {
@@ -89,7 +89,6 @@ export default function TranscriptLine({
   enableEditing,
 
   handleTranscriptChange,
-  onSpeakerChange,
 }) {
   const filteredResults = useMemo(() => results.filter((r) => enabledCategories.includes(r.Category)), [
     results,
@@ -102,35 +101,30 @@ export default function TranscriptLine({
   return (
     <React.Fragment>
       {enableEditing && (
-        <Box mb={8}>
-          {chunk.speaker && (
-            <Editable defaultValue={chunk.speaker} onSubmit={(nextSpeaker) => onSpeakerChange(nextSpeaker.trim())}>
-              <EditablePreview width='100%' />
+        <Editable
+          defaultValue={chunk.text}
+          onSubmit={(nextValue) => {
+            handleTranscriptChange(nextValue.trim());
+          }}
+          mb={8}
+        >
+          {({ isEditing, onEdit }) => (
+            <>
+              {chunk.speaker && <div>{chunk.speaker}</div>}
+
               <EditableInput />
-            </Editable>
+              {!isEditing && (
+                <p className={s.base} onClick={onEdit}>
+                  {ranges.map((r, i) => (
+                    <span key={i} className={cs(r.matches.map((x) => classMap[x.Category]))}>
+                      {r.text}
+                    </span>
+                  ))}
+                </p>
+              )}
+            </>
           )}
-
-          <Editable
-            defaultValue={chunk.text}
-            onSubmit={(nextTranscriptLine) => handleTranscriptChange(nextTranscriptLine.trim())}
-          >
-            {({ isEditing, onEdit }) => (
-              <>
-                <EditableInput />
-
-                {!isEditing && (
-                  <p className={s.base} onClick={onEdit}>
-                    {ranges.map((r, i) => (
-                      <span key={i} className={cs(r.matches.map((x) => classMap[x.Category]))}>
-                        {r.text}
-                      </span>
-                    ))}
-                  </p>
-                )}
-              </>
-            )}
-          </Editable>
-        </Box>
+        </Editable>
       )}
 
       {!enableEditing && (

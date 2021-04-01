@@ -4,15 +4,12 @@ import { API, Auth } from 'aws-amplify';
 import s from './export.module.css';
 import { Table } from 'react-bootstrap';
 import Header from './components/Header';
-import ExportPaneHeader from './components/ExportPaneHeader/ExportPaneHeader';
-
 import { STAGE_SEARCH_EXPORT } from './consts';
 
 export default function Export() {
   let params = useParams();
   const [transcribeText, setTranscribeText] = useState([]);
   const [comprehendDict, setComprehendDict] = useState({});
-  const [soapNotes, setSoapNotes] = useState([]);
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
@@ -29,11 +26,8 @@ export default function Export() {
       const result = await API.get(apiName, path, myInit);
       const transcribe = result['data']['transcribe'];
       const comprehend = result['data']['comprehend'];
-      const soapNotes = result['data']['soapNotes'];
-
       setTranscribeText(transcribe.split('.'));
       setComprehendDict(JSON.parse(comprehend));
-      setSoapNotes(soapNotes.split('\n'));
       setUpdated(true);
     }
     loadS3Content(params.sid);
@@ -47,7 +41,7 @@ export default function Export() {
     const Session = comprehendDict.Session;
 
     return (
-      <div>
+      <div className={s.session}>
         <main>
           <Table className={s.ses} bordered striped small>
             <thead>
@@ -86,19 +80,10 @@ export default function Export() {
   };
 
   const TranscribeSection = () => (
-    <div>
-      <ExportPaneHeader content='Transcription' type='SUB_SECTION' />
+    <div className={s.transcribe}>
+      <h2>Session Transcription</h2>
       {transcribeText.map((text) => {
         return text ? <p>{text + '.'}</p> : null;
-      })}
-    </div>
-  );
-
-  const SOAPNotesSection = () => (
-    <div>
-      <ExportPaneHeader content='SOAP Notes' type='SUB_SECTION' />
-      {soapNotes.map((text) => {
-        return text ? <p>{text}</p> : null;
       })}
     </div>
   );
@@ -227,9 +212,8 @@ export default function Export() {
       {updated && (
         <div className={s.container}>
           <SessionSection></SessionSection>
-          <SOAPNotesSection></SOAPNotesSection>
-          <ComprehendSection></ComprehendSection>
           <TranscribeSection></TranscribeSection>
+          <ComprehendSection></ComprehendSection>
         </div>
       )}
     </div>

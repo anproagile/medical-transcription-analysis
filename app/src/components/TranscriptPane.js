@@ -20,7 +20,6 @@ export default function TranscriptPane({
   inProgress,
   enableEditing,
   handleTranscriptChange,
-  onSpeakerChange,
 }) {
   const container = useRef();
 
@@ -42,7 +41,6 @@ export default function TranscriptPane({
               enabledCategories={CATEGORIES}
               enableEditing={enableEditing}
               handleTranscriptChange={(value) => handleTranscriptChange(i, value)}
-              onSpeakerChange={(value) => onSpeakerChange(i, value)}
             />
           ))}
 
