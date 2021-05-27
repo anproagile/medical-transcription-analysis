@@ -204,6 +204,19 @@ export default function Home() {
     });
   };
 
+  const onSpeakerChange = (i, value) => {
+    setTranscripts((t) => {
+      if (t[i].speaker === value) return t;
+
+      const newChunk = {
+        ...t[i],
+        speaker: value,
+      };
+
+      return [...t.slice(0, i), newChunk, ...t.slice(i + 1)];
+    });
+  };
+
   const addTranscriptChunk = useCallback(({ Alternatives, IsPartial, StartTime }) => {
     const items = Alternatives[0].Items;
 
@@ -450,8 +463,6 @@ export default function Home() {
 
   const clearSessionFields = () => {
     setSessionName('');
-    // setPatientId("");
-    // setHealthCareProfessionalId("");
   };
 
   async function createSession(data) {
@@ -479,6 +490,7 @@ export default function Home() {
     });
     const transcribeAddress = `transcribe-medical-output/${sessionId}/${sessionId}-session-transcribe.txt`;
     const comprehendAddress = `comprehend-medical-output/${sessionId}/${sessionId}-session-comprehend.json`;
+    const soapNotesAddress = `soap-notes-medical-output/${sessionId}/${sessionId}-session-soap-notes.txt`;
 
     var dict = {
       Session: {
@@ -549,6 +561,8 @@ export default function Home() {
     });
     Storage.put(comprehendAddress, JSON.stringify(dict));
 
+    Storage.put(soapNotesAddress, soapSummary);
+
     const data = {
       PatientId: patientId,
       HealthCareProfessionalId: healthCareProfessionalId,
@@ -558,6 +572,7 @@ export default function Home() {
       TimeStampEnd: timeStampEnd,
       TranscribeS3Path: transcribeAddress,
       ComprehendS3Path: comprehendAddress,
+      SOAPNotesS3Path: soapNotesAddress,
     };
     Storage.configure({
       bucket: process.env.REACT_APP_REACT_APP_WebAppBucketName,
@@ -726,6 +741,7 @@ export default function Home() {
           enableEditing={stage === STAGE_TRANSCRIBED || stage === STAGE_SOAP_REVIEW}
           visible={stage === STAGE_TRANSCRIBING || stage === STAGE_TRANSCRIBED}
           handleTranscriptChange={onTranscriptChange}
+          onSpeakerChange={onSpeakerChange}
         />
 
         <AnalysisPane
