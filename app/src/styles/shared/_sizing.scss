@@ -1,5 +1,3 @@
-@use "sass:math";
-
 $base-font-size: 16;
 $base-viewport-width: 1920;
 
@@ -9,7 +7,7 @@ $base-viewport-width: 1920;
 // @param  {number} $context A unitless number that acts as the divisor
 // @return {number}          The size in rem
 @function rem($size, $context: $base-font-size) {
-  @return math.div($size, $context) * 1rem;
+  @return ($size / $context) * 1rem;
 }
 
 // Given a unitless number and an optional context, calculate a size in rem.
@@ -18,7 +16,7 @@ $base-viewport-width: 1920;
 // @param  {number} $context A unitless number that acts as the divisor
 // @return {number}          The size in rem
 @function em($size, $context: $base-font-size) {
-  @return math.div($size, $context) * 1em;
+  @return ($size / $context) * 1em;
 }
 
 // Given a unitless number and an optional context, calculate a size in vw.
@@ -27,5 +25,5 @@ $base-viewport-width: 1920;
 // @param  {number} $context A unitless number that acts as the divisor
 // @return {number}          The size in vw
 @function vw($size, $context: $base-viewport-width) {
-  @return (math.div($size, $context) * 100) * 1vw;
+  @return ($size / $context * 100) * 1vw;
 }
